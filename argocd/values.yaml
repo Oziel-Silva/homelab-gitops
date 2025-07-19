@@ -1,0 +1,249 @@
+# ArgoCD Helm Values - Homelab Configuration
+# Chart: https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd
+
+## Global Settings
+global:
+  # Domain configuration
+  domain: argocd.127.0.0.1.sslip.io
+  
+## ArgoCD Configuration
+configs:
+  # Main ArgoCD configuration
+  cm:
+    # Server configuration
+    url: "http://argocd.127.0.0.1.sslip.io"
+    server.insecure: true
+    
+    # Anonymous access (homelab only!)
+    users.anonymous.enabled: true
+    
+    # Application settings
+    application.instanceLabelKey: "argocd.argoproj.io/instance"
+    application.namespaces: "*"
+    
+    # Timeout settings
+    timeout.reconciliation: "180s"
+    timeout.hard.reconciliation: "0s"
+    
+    # Pre-configured repositories
+    repositories: |
+      - type: git
+        url: https://github.com/argoproj/argocd-example-apps
+      - type: helm
+        url: https://charts.bitnami.com/bitnami
+        name: bitnami
+      - type: helm
+        url: https://kubernetes-charts.storage.googleapis.com
+        name: stable
+    
+    # Resource exclusions
+    resource.exclusions: |
+      - apiGroups:
+        - cilium.io
+        kinds:
+        - CiliumIdentity
+        clusters:
+        - "*"
+  
+  # RBAC Configuration
+  rbac:
+    policy.default: role:readonly
+    policy.csv: |
+      # Admin role
+      p, role:admin, applications, *, */*, allow
+      p, role:admin, clusters, *, *, allow
+      p, role:admin, repositories, *, *, allow
+      p, role:admin, certificates, *, *, allow
+      p, role:admin, projects, *, *, allow
+      p, role:admin, accounts, *, *, allow
+      p, role:admin, gpgkeys, *, *, allow
+      p, role:admin, logs, *, */*, allow
+      p, role:admin, exec, *, */*, allow
+      
+      # Developer role
+      p, role:developer, applications, *, */*, allow
+      p, role:developer, repositories, *, *, allow
+      p, role:developer, clusters, get, *, allow
+      p, role:developer, projects, get, *, allow
+      p, role:developer, logs, get, */*, allow
+      
+      # Readonly role (default for anonymous)
+      p, role:readonly, applications, get, */*, allow
+      p, role:readonly, repositories, get, *, allow
+      p, role:readonly, clusters, get, *, allow
+      p, role:readonly, projects, get, *, allow
+      p, role:readonly, logs, get, */*, allow
+      
+      # Group assignments
+      g, argocd-admins, role:admin
+  
+  # Server configuration
+  params:
+    # Increase operation workers
+    controller.operation.workers: "10"
+    controller.status.processors: "20"
+    controller.app.resync: "180"
+    
+    # Server insecure mode
+    server.insecure: true
+
+## Server Configuration
+server:
+  # Replica count for HA (use 1 for homelab)
+  replicas: 1
+  
+  # Auto scale configuration
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 3
+  
+  # Service configuration
+  service:
+    type: ClusterIP
+    
+  # Ingress configuration
+  ingress:
+    enabled: true
+    ingressClassName: traefik
+    hostname: argocd.127.0.0.1.sslip.io
+    
+    annotations:
+      traefik.ingress.kubernetes.io/router.entrypoints: websecure
+      traefik.ingress.kubernetes.io/router.tls: "true"
+    
+    tls: true
+    extraTls:
+      - hosts:
+          - argocd.127.0.0.1.sslip.io
+  
+  # Extra arguments
+  extraArgs:
+    - --insecure
+  
+  # Resource limits
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+## Application Controller Configuration  
+controller:
+  replicas: 1
+  
+  # Resource limits
+  resources:
+    requests:
+      cpu: 250m
+      memory: 1Gi
+    limits:
+      cpu: 500m
+      memory: 2Gi
+  
+  # Environment variables for performance tuning
+  env:
+    - name: ARGOCD_CONTROLLER_OPERATION_WORKERS
+      value: "10"
+    - name: ARGOCD_CONTROLLER_STATUS_PROCESSORS  
+      value: "20"
+    - name: ARGOCD_CONTROLLER_APP_RESYNC
+      value: "180"
+
+## Repo Server Configuration
+repoServer:
+  replicas: 1
+  
+  # Resource limits
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 1Gi
+  
+  # Environment variables
+  env:
+    - name: ARGOCD_EXEC_TIMEOUT
+      value: "300s"
+    - name: ARGOCD_REPO_SERVER_PARALLELISM_LIMIT
+      value: "10"
+    - name: ARGOCD_REPO_SERVER_HELM_FILE_LIMIT
+      value: "10000"
+
+## Redis Configuration
+redis:
+  enabled: true
+  
+  # Resource limits  
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi
+
+## ApplicationSet Controller (optional)
+applicationSet:
+  enabled: true
+  replicas: 1
+  
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+## Notifications Controller (optional)
+notifications:
+  enabled: true
+  
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+## Dex (Identity Provider) - Disabled for homelab
+dex:
+  enabled: false
+
+## External Redis - Disabled (using built-in)
+externalRedis:
+  host: ""
+  port: 6379
+
+## Additional Applications (App-of-Apps pattern)
+# Uncomment and modify as needed
+# server:
+#   additionalApplications:
+#     - name: argocd-apps
+#       namespace: argocd
+#       project: default
+#       source:
+#         repoURL: https://github.com/your-org/your-gitops-repo
+#         targetRevision: HEAD
+#         path: applications
+#       destination:
+#         server: https://kubernetes.default.svc
+#         namespace: argocd
+#       syncPolicy:
+#         automated:
+#           prune: true
+#           selfHeal: true
+#         syncOptions:
+#         - CreateNamespace=true
+
+## Security Context (optional)
+# securityContext:
+#   runAsNonRoot: true
+#   runAsUser: 999
+#   fsGroup: 999

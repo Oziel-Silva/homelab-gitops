@@ -1,0 +1,28 @@
+# Helm
+*.tgz
+charts/
+Chart.lock
+
+# Temporary files
+*.tmp
+*.bak
+*~
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Secrets (nunca commitar secrets!)
+*secret*.yaml
+*password*
+*.key
+*.pem
