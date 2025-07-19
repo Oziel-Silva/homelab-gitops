@@ -1380,16 +1380,7 @@ config: |
     trace_by_id:
       query_timeout: {{ .Values.querier.config.trace_by_id.query_timeout }}
     search:
-      external_endpoints: {{- toYaml .Values.querier.config.search.external_endpoints | nindent 6 }}
       query_timeout: {{ .Values.querier.config.search.query_timeout }}
-      prefer_self: {{ .Values.querier.config.search.prefer_self }}
-      external_hedge_requests_at: {{ .Values.querier.config.search.external_hedge_requests_at }}
-      external_hedge_requests_up_to: {{ .Values.querier.config.search.external_hedge_requests_up_to }}
-      external_backend: {{ .Values.querier.config.search.external_backend }}
-      {{- if .Values.querier.config.search.google_cloud_run }}
-      google_cloud_run:
-        {{- toYaml .Values.querier.config.search.google_cloud_run | nindent 6 }}
-      {{- end }}
     max_concurrent_queries: {{ .Values.querier.config.max_concurrent_queries }}
   query_frontend:
     max_outstanding_per_tenant: {{ .Values.queryFrontend.config.max_outstanding_per_tenant }}
