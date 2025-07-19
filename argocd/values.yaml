@@ -49,8 +49,10 @@ configs:
   rbac:
     policy.default: role:readonly
     policy.csv: |
-      # Admin role
+      # Admin role with full permissions
       p, role:admin, applications, *, */*, allow
+      p, role:admin, applications, sync, */*, allow
+      p, role:admin, applications, action/*, */*, allow
       p, role:admin, clusters, *, *, allow
       p, role:admin, repositories, *, *, allow
       p, role:admin, certificates, *, *, allow
@@ -60,8 +62,22 @@ configs:
       p, role:admin, logs, *, */*, allow
       p, role:admin, exec, *, */*, allow
       
+      # Default admin user permissions
+      p, admin, applications, *, */*, allow
+      p, admin, applications, sync, */*, allow
+      p, admin, applications, action/*, */*, allow
+      p, admin, clusters, *, *, allow
+      p, admin, repositories, *, *, allow
+      p, admin, certificates, *, *, allow
+      p, admin, projects, *, *, allow
+      p, admin, accounts, *, *, allow
+      p, admin, gpgkeys, *, *, allow
+      p, admin, logs, *, */*, allow
+      p, admin, exec, *, */*, allow
+      
       # Developer role
       p, role:developer, applications, *, */*, allow
+      p, role:developer, applications, sync, */*, allow
       p, role:developer, repositories, *, *, allow
       p, role:developer, clusters, get, *, allow
       p, role:developer, projects, get, *, allow
