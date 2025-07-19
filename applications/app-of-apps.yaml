@@ -8,8 +8,8 @@ metadata:
 spec:
   project: default
   source:
-    # ALTERE AQUI para seu repositório GitHub
-    repoURL: https://github.com/SEU_USUARIO/homelab-gitops
+    # Seu repositório GitHub pessoal
+    repoURL: https://github.com/Oziel-Silva/homelab-gitops
     targetRevision: HEAD
     path: applications
   destination:
