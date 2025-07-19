@@ -1535,7 +1535,7 @@ storage:
       secret_key: supersecret
       insecure: true
       # Force path-style addressing for MinIO compatibility
-      s3forcepathstyle: true
+      force_path_style: true
     # The worker pool is used primarily when finding traces by id, but is also used by others.
     pool:
       # -- Total number of workers pulling jobs from the queue
@@ -1552,7 +1552,7 @@ storage:
       access_key: grafana-tempo
       secret_key: supersecret
       insecure: true
-      s3forcepathstyle: true
+      force_path_style: true
 
 # -- The standard overrides configuration section. This can include a `defaults` object for applying to all tenants (not to be confused with the `global` property of the same name, which overrides `max_byte_per_trace` for all tenants). For an example on how to enable the metrics generator using the `global_overrides` object, see the 'Activate metrics generator' section below. Refer to [Standard overrides](https://grafana.com/docs/tempo/latest/configuration/#standard-overrides) for more details.
 global_overrides:
