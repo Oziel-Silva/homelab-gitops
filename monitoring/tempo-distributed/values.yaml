@@ -1530,7 +1530,7 @@ storage:
     # S3 configuration for MinIO
     s3:
       bucket: tempo-traces
-      endpoint: tempo-distributed-minio:9000
+      endpoint: tempo-minio:9000
       access_key: grafana-tempo
       secret_key: supersecret
       insecure: true
@@ -1547,7 +1547,7 @@ storage:
     backend: s3
     s3:
       bucket: enterprise-traces-admin
-      endpoint: tempo-distributed-minio:9000
+      endpoint: tempo-minio:9000
       access_key: grafana-tempo
       secret_key: supersecret
       insecure: true
