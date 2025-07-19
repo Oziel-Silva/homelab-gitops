@@ -206,7 +206,7 @@ ingester:
   # -- Persistence configuration for ingester
   persistence:
     # -- Enable creating PVCs which is required when using boltdb-shipper
-    enabled: true
+    enabled: false
     # -- use emptyDir with ramdisk instead of PVC. **Please note that all data in ingester will be lost on pod restart**
     inMemory: false
     # -- Size of persistent or memory disk
@@ -221,7 +221,7 @@ ingester:
     annotations: {}
   persistentVolumeClaimRetentionPolicy:
     # -- Enable Persistent volume retention policy for StatefulSet
-    enabled: true
+    enabled: false
     # -- Volume retention behavior when the replica count of the StatefulSet is reduced
     whenScaled: Retain
     # -- Volume retention behavior that applies when the StatefulSet is deleted
@@ -800,6 +800,20 @@ querier:
     search:
       # -- Timeout for search requests
       query_timeout: 30s
+      # -- If search_external_endpoints is set then the querier will primarily act as a proxy for whatever serverless backend you have configured. This setting allows the operator to have the querier prefer itself for a configurable number of subqueries.
+      prefer_self: 10
+      # -- If set to a non-zero value a second request will be issued at the provided duration. Recommended to be set to p99 of external search requests to reduce long tail latency.
+      external_hedge_requests_at: 8s
+      # -- The maximum number of requests to execute when hedging. Requires hedge_requests_at to be set.
+      external_hedge_requests_up_to: 2
+      # -- A list of external endpoints that the querier will use to offload backend search requests
+      external_endpoints: []
+      # -- The serverless backend to use. The default value of "" omits
+      # -- credentials when querying the external backend.
+      external_backend: ""
+      # -- Google Cloud Run configuration. Will be used only if the value of
+      # -- external_backend is "google_cloud_run".
+      google_cloud_run: {}
     # -- This value controls the overall number of simultaneous subqueries that the querier will service at once. It does not distinguish between the types of queries.
     max_concurrent_queries: 20
 
@@ -1380,7 +1394,16 @@ config: |
     trace_by_id:
       query_timeout: {{ .Values.querier.config.trace_by_id.query_timeout }}
     search:
+      external_endpoints: {{- toYaml .Values.querier.config.search.external_endpoints | nindent 6 }}
       query_timeout: {{ .Values.querier.config.search.query_timeout }}
+      prefer_self: {{ .Values.querier.config.search.prefer_self }}
+      external_hedge_requests_at: {{ .Values.querier.config.search.external_hedge_requests_at }}
+      external_hedge_requests_up_to: {{ .Values.querier.config.search.external_hedge_requests_up_to }}
+      external_backend: {{ .Values.querier.config.search.external_backend }}
+      {{- if .Values.querier.config.search.google_cloud_run }}
+      google_cloud_run:
+        {{- toYaml .Values.querier.config.search.google_cloud_run | nindent 6 }}
+      {{- end }}
     max_concurrent_queries: {{ .Values.querier.config.max_concurrent_queries }}
   query_frontend:
     max_outstanding_per_tenant: {{ .Values.queryFrontend.config.max_outstanding_per_tenant }}
@@ -1526,16 +1549,7 @@ storage:
       # -- Lis with dedicated attribute columns (only for vParquet3 or later)
       dedicated_columns: []
     # -- The supported storage backends are gcs, s3 and azure, as specified in https://grafana.com/docs/tempo/latest/configuration/#storage
-    backend: s3
-    # S3 configuration for MinIO
-    s3:
-      bucket: tempo-traces
-      endpoint: tempo-distributed-minio:9000
-      access_key: grafana-tempo
-      secret_key: supersecret
-      insecure: true
-      # Force path-style addressing for MinIO compatibility
-      s3forcepathstyle: true
+    backend: local
     # The worker pool is used primarily when finding traces by id, but is also used by others.
     pool:
       # -- Total number of workers pulling jobs from the queue
@@ -1545,14 +1559,7 @@ storage:
   # Settings for the Admin client storage backend and buckets. Only valid is enterprise.enabled is true.
   admin:
     # -- The supported storage backends are gcs, s3 and azure, as specified in https://grafana.com/docs/enterprise-traces/latest/configure/reference/#admin_client_config
-    backend: s3
-    s3:
-      bucket: enterprise-traces-admin
-      endpoint: tempo-distributed-minio:9000
-      access_key: grafana-tempo
-      secret_key: supersecret
-      insecure: true
-      s3forcepathstyle: true
+    backend: filesystem
 
 # -- The standard overrides configuration section. This can include a `defaults` object for applying to all tenants (not to be confused with the `global` property of the same name, which overrides `max_byte_per_trace` for all tenants). For an example on how to enable the metrics generator using the `global_overrides` object, see the 'Activate metrics generator' section below. Refer to [Standard overrides](https://grafana.com/docs/tempo/latest/configuration/#standard-overrides) for more details.
 global_overrides:
@@ -1780,7 +1787,7 @@ prometheusRule:
   #       expr: sum(rate(container_cpu_usage_seconds_total[1m])) by (node, namespace, pod, container)
 
 minio:
-  enabled: true
+  enabled: false
   mode: standalone
   rootUser: grafana-tempo
   rootPassword: supersecret

@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: collector-metrics
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/name: collector-metrics
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "8889"
+    prometheus.io/path: "/metrics"
+spec:
+  selector:
+    app.kubernetes.io/name: collector-metrics
+  ports:
+    - name: metrics
+      port: 8889
+      targetPort: 8889
