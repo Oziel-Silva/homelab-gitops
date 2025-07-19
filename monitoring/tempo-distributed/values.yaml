@@ -120,7 +120,7 @@ ingester:
   # -- Annotations for the ingester StatefulSet
   annotations: {}
   # -- Number of replicas for the ingester
-  replicas: 3
+  replicas: 1
   # -- hostAliases to add
   hostAliases: []
   #  - ip: 1.2.3.4
@@ -131,7 +131,7 @@ ingester:
     # -- Enable autoscaling for the ingester. WARNING: Autoscaling ingesters can result in lost data. Only do this if you know what you're doing.
     enabled: false
     # -- Minimum autoscaling replicas for the ingester
-    minReplicas: 2
+    minReplicas: 1
     # -- Maximum autoscaling replicas for the ingester
     maxReplicas: 3
     # -- Autoscaling behavior configuration for the ingester
@@ -228,7 +228,7 @@ ingester:
     whenDeleted: Retain
   config:
     # -- Number of copies of spans to store in the ingester ring
-    replication_factor: 3
+    replication_factor: 1
     # -- Amount of time a trace must be idle before flushing it to the wal.
     trace_idle_period: null
     # -- How often to sweep all tenants and move traces from live -> wal -> completed blocks.
