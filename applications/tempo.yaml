@@ -10,12 +10,12 @@ spec:
   sources:
   - repoURL: https://grafana.github.io/helm-charts
     chart: tempo-distributed
-    targetRevision: "*"
+    targetRevision: "1.23.1"
     helm:
       valueFiles:
       - $values/monitoring/tempo-distributed/values.yaml
   - repoURL: https://github.com/Oziel-Silva/homelab-gitops
-    targetRevision: "1.23.1"
+    targetRevision: HEAD
     ref: values
   destination:
     server: https://kubernetes.default.svc
