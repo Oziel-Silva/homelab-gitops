@@ -15,7 +15,7 @@ spec:
       valueFiles:
       - $values/monitoring/tempo-distributed/values.yaml
   - repoURL: https://github.com/Oziel-Silva/homelab-gitops
-    targetRevision: HEAD
+    targetRevision: "1.23.1"
     ref: values
   destination:
     server: https://kubernetes.default.svc
