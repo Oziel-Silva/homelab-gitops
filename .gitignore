@@ -26,3 +26,6 @@ Thumbs.db
 *password*
 *.key
 *.pem
+
+# Folder specific ignores
+/venv
