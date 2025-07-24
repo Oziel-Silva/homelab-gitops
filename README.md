@@ -1,31 +1,31 @@
 # Homelab GitOps Repository 🚀
 
-Este repositório contém todas as configurações GitOps para o homelab, gerenciadas pelo ArgoCD.
+This repository contains all GitOps configurations for the homelab, managed by ArgoCD.
 
-## 📁 Estrutura
+## 📁 Structure
 
 ```
 gitops/
-├── argocd/                    # Configurações do ArgoCD
-│   ├── values.yaml           # Valores Helm do ArgoCD
-│   └── deploy.sh            # Script de deploy
-├── applications/             # Definições de aplicações ArgoCD
-├── monitoring/              # Stack de monitoramento
-├── networking/              # Configurações de rede
-└── README.md               # Este arquivo
+├── argocd/                    # ArgoCD configurations
+│   ├── values.yaml           # ArgoCD Helm values
+│   └── deploy.sh            # Deployment script
+├── applications/             # ArgoCD application definitions
+├── monitoring/              # Monitoring stack
+├── networking/              # Network configurations
+└── README.md               # This file
 ```
 
-## 🎯 Aplicações Gerenciadas
+## 🎯 Managed Applications
 
 - **ArgoCD**: GitOps Controller
 - **Monitoring Stack**: Prometheus, Grafana, etc.
 - **Networking**: Ingress, DNS, etc.
 
-## 🚀 Como usar
+## 🚀 How to use
 
-1. **ArgoCD**: Configure usando `argocd/deploy.sh`
-2. **Aplicações**: Adicione manifests em suas respectivas pastas
-3. **GitOps**: Push para o repositório e o ArgoCD sincroniza automaticamente
+1. **ArgoCD**: Configure using `argocd/deploy.sh`
+2. **Applications**: Add manifests to their respective folders
+3. **GitOps**: Push to repository and ArgoCD syncs automatically
 
 ## 🔗 Links
 
@@ -34,4 +34,3 @@ gitops/
 - **Prometheus**: https://prometheus.127.0.0.1.sslip.io
 
 ---
-**Powered by GitOps & ArgoCD** 🎊
