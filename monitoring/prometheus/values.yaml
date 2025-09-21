@@ -1023,7 +1023,7 @@ alertmanager:
     storage:
     volumeClaimTemplate:
       spec:
-        storageClassName: gluster
+        storageClassName: local-path
         accessModes: ["ReadWriteOnce"]
         resources:
           requests:
