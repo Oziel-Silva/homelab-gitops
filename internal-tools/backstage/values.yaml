@@ -437,6 +437,10 @@ postgresql:
   # -- Switch to enable or disable the PostgreSQL helm chart
   enabled: true
 
+  # -- PostgreSQL image configuration
+  image:
+    tag: "18"
+
   # -- The authentication details of the Postgres database
   auth:
 
