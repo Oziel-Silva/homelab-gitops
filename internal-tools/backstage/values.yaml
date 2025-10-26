@@ -275,7 +275,15 @@ backstage:
   #   app:
   #     baseUrl: https://somedomain.tld
   # -- Generates ConfigMap and configures it in the Backstage pods
-  appConfig: {}
+  # Generate a ConfigMap with runtime config
+  appConfig: |
+    app:
+      baseUrl: https://backstage.127.0.0.1.sslip.io
+    backend:
+      baseUrl: https://backstage.127.0.0.1.sslip.io
+      cors:
+        origin: https://backstage.127.0.0.1.sslip.io
+      trustProxy: true
 
   # -- Affinity for pod assignment
   # <br /> Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
