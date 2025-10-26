@@ -83,7 +83,7 @@ ingress:
   tls:
 
     # -- Enable TLS configuration for the host defined at `ingress.host` parameter
-    enabled: false
+    enabled: true
 
     # -- The name to which the TLS Secret will be called
     secretName: ""
