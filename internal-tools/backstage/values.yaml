@@ -56,16 +56,16 @@ diagnosticMode:
 ingress:
 
   # -- Enable the creation of the ingress resource
-  enabled: false
+  enabled: true
 
   # -- Name of the IngressClass cluster resource which defines which controller will implement the resource (e.g nginx)
-  className: ""
+  className: "traefik"
 
   # -- Additional annotations for the Ingress resource
   annotations: {}
 
   # -- Hostname to be used to expose the route to access the backstage application (e.g: backstage.IP.nip.io)
-  host: ""
+  host: "backstage.127.0.0.sslip.io"
 
   # -- List of additional hostnames to be covered with this ingress record (e.g. a CNAME)
   # <!-- E.g.
