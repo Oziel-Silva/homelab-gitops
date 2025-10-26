@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: backstage
+  namespace: argocd
+  labels:
+    app.kubernetes.io/name: backstage
+spec:
+  project: default
+  sources:
+  - repoURL: https://backstage.github.io/charts
+    chart: backstage
+    targetRevision: "*"
+    helm:
+      valueFiles:
+      - $values/internal-tools/backstage/values.yaml
+  - repoURL: https://github.com/Oziel-Silva/homelab-gitops
+    targetRevision: HEAD
+    ref: values
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: backstage
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
