@@ -439,7 +439,7 @@ postgresql:
 
   # -- PostgreSQL image configuration
   image:
-    tag: "18"
+    tag: "18.1.1"
 
   # -- The authentication details of the Postgres database
   auth:
