@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: minio
+  namespace: argocd
+  labels:
+    app.kubernetes.io/name: minio
+spec:
+  project: default
+  sources:
+  - repoURL:  https://charts.min.io/
+    chart: minio
+    targetRevision: "1.41.0"
+    helm:
+      valueFiles:
+      - $values/data-project/minio/values.yaml
+  - repoURL: https://github.com/Oziel-Silva/homelab-gitops
+    targetRevision: HEAD
+    ref: values
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: data
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true
