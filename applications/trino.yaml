@@ -10,7 +10,7 @@ spec:
   sources:
   - repoURL: https://trinodb.github.io/charts/
     chart: trino
-    targetRevision: "1.41.6"
+    targetRevision: "1.41.0"
     helm:
       valueFiles:
       - $values/data-project/trino/values.yaml
