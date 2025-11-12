@@ -19,7 +19,7 @@ spec:
     ref: values
   destination:
     server: https://kubernetes.default.svc
-    namespace: monitoring
+    namespace: data
   syncPolicy:
     syncOptions:
     - CreateNamespace=true
