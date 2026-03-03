@@ -278,12 +278,27 @@ backstage:
   # Generate a ConfigMap with runtime config
   appConfig: |
     app:
+      title: Homelab Backstage
       baseUrl: https://backstage.127.0.0.1.sslip.io
+    organization:
+      name: Homelab
     backend:
       baseUrl: https://backstage.127.0.0.1.sslip.io
+      listen:
+        port: 7007
       cors:
         origin: https://backstage.127.0.0.1.sslip.io
+        methods: [GET, HEAD, PATCH, POST, PUT, DELETE]
+        credentials: true
+      csp:
+        connect-src: ["'self'", 'http:', 'https:']
       trustProxy: true
+      database:
+        client: better-sqlite3
+        connection: ':memory:'
+    auth:
+      providers:
+        guest: {}
     techdocs:
       builder: 'local'
       generator:
@@ -294,7 +309,6 @@ backstage:
       rules:
         - allow: [Component, System, API, Resource, Location, Template, User, Group, Domain]
       locations:
-        # Backstage example entities (good starting point)
         - type: url
           target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/all-components.yaml
           rules:
