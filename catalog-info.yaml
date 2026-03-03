@@ -1,0 +1,17 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: homelab-gitops
+  title: Homelab GitOps
+  description: ArgoCD GitOps repository for the homelab Kubernetes cluster.
+  annotations:
+    github.com/project-slug: Oziel-Silva/homelab-gitops
+  tags:
+    - kubernetes
+    - argocd
+    - gitops
+    - homelab
+spec:
+  type: service
+  lifecycle: production
+  owner: user:default/guest

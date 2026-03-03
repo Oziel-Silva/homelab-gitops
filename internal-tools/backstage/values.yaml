@@ -278,7 +278,7 @@ backstage:
   # Generate a ConfigMap with runtime config
   appConfig: |
     app:
-      title: Homelab Backstage
+      title: Homelab - Oziel Backstage
       baseUrl: https://backstage.127.0.0.1.sslip.io
     organization:
       name: Homelab
@@ -309,6 +309,11 @@ backstage:
       rules:
         - allow: [Component, System, API, Resource, Location, Template, User, Group, Domain]
       locations:
+        # Homelab GitOps repo
+        - type: url
+          target: https://github.com/Oziel-Silva/homelab-gitops/blob/main/catalog-info.yaml
+          rules:
+            - allow: [Component]
         - type: url
           target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/all-components.yaml
           rules:
