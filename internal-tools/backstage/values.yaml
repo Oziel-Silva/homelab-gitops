@@ -290,6 +290,31 @@ backstage:
         runIn: 'local'
       publisher:
         type: 'local'
+    catalog:
+      rules:
+        - allow: [Component, System, API, Resource, Location, Template, User, Group, Domain]
+      locations:
+        # Backstage example entities (good starting point)
+        - type: url
+          target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/all-components.yaml
+          rules:
+            - allow: [Component]
+        - type: url
+          target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/all-systems.yaml
+          rules:
+            - allow: [System]
+        - type: url
+          target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/all-apis.yaml
+          rules:
+            - allow: [API]
+        - type: url
+          target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/all-resources.yaml
+          rules:
+            - allow: [Resource]
+        - type: url
+          target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/all-templates.yaml
+          rules:
+            - allow: [Template]
 
   # -- Affinity for pod assignment
   # <br /> Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
