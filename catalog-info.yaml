@@ -1,4 +1,15 @@
 apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: oziel-silva
+  annotations:
+    github.com/user-login: Oziel-Silva
+spec:
+  profile:
+    displayName: Oziel Silva
+  memberOf: []
+---
+apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   name: homelab-gitops

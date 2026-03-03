@@ -172,7 +172,8 @@ backstage:
   extraEnvVarsCM: []
 
   # -- Backstage container environment variables from existing Secrets
-  extraEnvVarsSecrets: []
+  extraEnvVarsSecrets:
+    - backstage-github-oauth
 
   # -- Backstage container additional ports
   extraPorts: []
@@ -297,8 +298,17 @@ backstage:
         client: better-sqlite3
         connection: ':memory:'
     auth:
+      environment: production
       providers:
-        guest: {}
+        github:
+          production:
+            clientId: ${AUTH_GITHUB_CLIENT_ID}
+            clientSecret: ${AUTH_GITHUB_CLIENT_SECRET}
+            signIn:
+              resolvers:
+                - resolver: usernameMatchingUserEntityName
+    permission:
+      enabled: false
     techdocs:
       builder: 'local'
       generator:
@@ -313,7 +323,7 @@ backstage:
         - type: url
           target: https://github.com/Oziel-Silva/homelab-gitops/blob/main/catalog-info.yaml
           rules:
-            - allow: [Component]
+            - allow: [Component, User]
         - type: url
           target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/all-components.yaml
           rules:
