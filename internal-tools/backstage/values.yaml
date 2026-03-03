@@ -298,10 +298,10 @@ backstage:
         client: better-sqlite3
         connection: ':memory:'
     auth:
-      environment: production
+      environment: development
       providers:
         github:
-          production:
+          development:
             clientId: ${AUTH_GITHUB_CLIENT_ID}
             clientSecret: ${AUTH_GITHUB_CLIENT_SECRET}
             signIn:
