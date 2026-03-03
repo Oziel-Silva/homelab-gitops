@@ -299,6 +299,8 @@ backstage:
         connection: ':memory:'
     auth:
       environment: development
+      session:
+        secret: ${AUTH_SESSION_SECRET}
       providers:
         github:
           development:
