@@ -154,7 +154,7 @@ backstage:
     backend: 7007
 
   # -- Backstage container command
-  command: ["node", "packages/backend"]
+  command: ["node", "packages/backend/dist/index.cjs.js"]
 
   # -- Backstage container command arguments
   args: []
