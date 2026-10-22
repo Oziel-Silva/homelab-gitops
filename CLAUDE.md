@@ -6,25 +6,31 @@ This is a GitOps repository for a homelab Kubernetes cluster managed by ArgoCD. 
 
 - **Repo**: `https://github.com/Oziel-Silva/homelab-gitops`
 - **ArgoCD UI**: `https://argocd.127.0.0.1.sslip.io`
-- **Ingress**: Traefik with sslip.io wildcard domains
+- **Ingress**: Gateway API (Envoy Gateway) with sslip.io wildcard domains
 
 ## Repository Structure
 
 ```
 gitops/
+├── Makefile             # bootstrap / delete / status do cluster
+├── cluster/             # k3d-config.yaml (1 server + 2 agents) e README
 ├── applications/        # ArgoCD Application manifests (App-of-Apps)
-├── argocd/              # ArgoCD Helm values and deploy script
-├── monitoring/          # Helm values per monitoring app
-│   ├── grafana/
-│   ├── loki/
-│   ├── prometheus/
-│   ├── promtail/
-│   ├── tempo/
-│   └── tempo-distributed/
-├── networking/          # Network configs (Traefik, etc.)
-│   └── backstage/
-└── internal-tools/      # Internal tooling
+├── argocd/              # ArgoCD Helm values e deploy.sh
+├── networking/
+│   ├── gateway-crds/    # CRDs do Gateway API (standard) + Envoy Gateway
+│   ├── envoy-gateway/   # Controller Envoy Gateway
+│   ├── cert-manager/    # cert-manager (certificados do Gateway)
+│   └── gateway/         # GatewayClass, Gateway, Certificate, HTTPRoutes (manifests)
+├── monitoring/          # Helm values: grafana, loki, prometheus, promtail, otel, tempo-distributed
+└── internal-tools/
+    └── backstage/
 ```
+
+## Cluster
+
+k3d sobre OrbStack (Mac Mini, headless). `make bootstrap` cria o cluster a partir de `cluster/k3d-config.yaml`
+(Traefik embutido desabilitado; ingress via Gateway API) e roda `argocd/deploy.sh`, que instala o ArgoCD e aplica o App-of-Apps.
+Dados usam `local-path` e são descartáveis (`make delete` apaga tudo). Acesso via `*.127.0.0.1.sslip.io`.
 
 ## Application Pattern
 
@@ -66,21 +72,33 @@ Key points:
 | Namespace    | Purpose                        |
 |-------------|-------------------------------|
 | `argocd`    | ArgoCD itself                 |
+| `envoy-gateway-system` | Envoy Gateway, Gateway `homelab` e certificado |
+| `cert-manager` | cert-manager               |
 | `monitoring`| Prometheus, Grafana, Loki, Tempo, Promtail |
-| `data`      | MinIO                         |
+| `backstage` | Backstage (ver `applications/backstage.yaml`) |
 
 ## Deployed Applications
 
-| App                  | Chart Repo                              | Values Path                        |
-|---------------------|----------------------------------------|------------------------------------|
-| grafana             | grafana.github.io/helm-charts          | monitoring/grafana/values.yaml     |
-| kube-prometheus-stack | prometheus-community.github.io/helm-charts | monitoring/prometheus/values.yaml |
-| loki                | grafana.github.io/helm-charts          | monitoring/loki/values.yaml        |
-| promtail            | grafana.github.io/helm-charts          | monitoring/promtail/values.yaml    |
-| tempo               | grafana.github.io/helm-charts          | monitoring/tempo/values.yaml       |
-| minio               | charts.min.io/ (pinned 5.4.0)         | data-project/minio/values.yaml     |
-| hive-ms             | custom                                 | -                                  |
-| trino               | custom                                 | -                                  |
+| App                   | Chart Repo                                 | Values Path                                    |
+|----------------------|-------------------------------------------|-----------------------------------------------|
+| gateway-crds         | docker.io/envoyproxy (OCI, v1.9.2)        | networking/gateway-crds/values.yaml           |
+| envoy-gateway        | docker.io/envoyproxy (OCI, v1.9.2)        | networking/envoy-gateway/values.yaml          |
+| cert-manager         | charts.jetstack.io (v1.21.2)              | networking/cert-manager/values.yaml           |
+| gateway              | este repo (diretório)                     | networking/gateway/*.yaml                     |
+| grafana              | grafana.github.io/helm-charts             | monitoring/grafana/values.yaml                |
+| kube-prometheus-stack | prometheus-community.github.io/helm-charts | monitoring/prometheus/values.yaml            |
+| loki                 | grafana.github.io/helm-charts             | monitoring/loki/values.yaml                   |
+| promtail             | grafana.github.io/helm-charts             | monitoring/promtail/values.yaml               |
+| tempo                | grafana.github.io/helm-charts (tempo-distributed) | monitoring/tempo-distributed/values.yaml |
+| backstage            | ver applications/backstage.yaml           | internal-tools/backstage/values.yaml          |
+
+## Ingress (Gateway API)
+
+- Sem Traefik/Ingress. Um único `Gateway` `homelab` (ns `envoy-gateway-system`) escuta 80/443 em `*.127.0.0.1.sslip.io`, com TLS self-signed via cert-manager.
+- Cada app publica um `HTTPRoute` com `parentRefs: homelab`. Ex.: `networking/gateway/argocd-route.yaml`.
+- Sync-waves: gateway-crds (-3) → envoy-gateway, cert-manager (-2) → gateway (-1).
+- Os charts do Envoy Gateway são OCI: o repo está registrado em `argocd/values.yaml` (`configs.repositories`, `enableOCI`).
+- Pendente: Prometheus, Loki e Backstage ainda têm blocos `ingress` com `ingressClassName: traefik` nos values; migrar para HTTPRoute.
 
 ## Key Conventions
 
