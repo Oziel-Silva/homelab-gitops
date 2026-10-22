@@ -321,7 +321,21 @@ defaultRules:
 
 ## Provide custom recording or alerting rules to be deployed into the cluster.
 ##
-additionalPrometheusRulesMap: {}
+additionalPrometheusRulesMap:
+  # Alerta de teste da PoC de triagem (HolmesGPT): dispara quando um pod do
+  # namespace holmes-poc fica sem estar Ready por 1 minuto.
+  holmes-poc:
+    groups:
+    - name: holmes-poc
+      rules:
+      - alert: HolmesPocPodNotReady
+        expr: kube_pod_status_ready{namespace="holmes-poc", condition="true"} == 0
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: Pod {{ $labels.namespace }}/{{ $labels.pod }} nao esta Ready
+          description: O pod {{ $labels.namespace }}/{{ $labels.pod }} esta ha mais de 1 minuto sem ficar Ready.
 #  rule-name:
 #    groups:
 #    - name: my_group
@@ -592,7 +606,8 @@ alertmanager:
   #       {{ end }}
 
   ingress:
-    enabled: true
+    # Desabilitado: exposto via HTTPRoute (networking/gateway/alertmanager-route.yaml)
+    enabled: false
 
     ingressClassName: "traefik"
 
@@ -3694,7 +3709,8 @@ prometheus:
   #     someoneelse:$apr1$DMZX2Z4q$6SbQIfyuLQd.xmo/P0m2c.
 
   ingress:
-    enabled: true
+    # Desabilitado: exposto via HTTPRoute (networking/gateway/prometheus-route.yaml)
+    enabled: false
 
     ingressClassName: "traefik"
 
