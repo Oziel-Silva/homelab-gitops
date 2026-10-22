@@ -8,6 +8,14 @@ global:
   
 ## ArgoCD Configuration
 configs:
+  # Repositório OCI do Envoy Gateway (charts gateway-helm e gateway-crds-helm)
+  repositories:
+    envoyproxy:
+      name: envoyproxy
+      type: helm
+      url: docker.io/envoyproxy
+      enableOCI: "true"
+
   # Main ArgoCD configuration
   cm:
     # Server configuration
@@ -118,21 +126,10 @@ server:
   service:
     type: ClusterIP
     
-  # Ingress configuration
+  # Ingress desabilitado: o acesso é feito via Gateway API (networking/gateway/argocd-route.yaml)
   ingress:
-    enabled: true
-    ingressClassName: traefik
-    hostname: argocd.127.0.0.1.sslip.io
-    
-    annotations:
-      traefik.ingress.kubernetes.io/router.entrypoints: websecure
-      traefik.ingress.kubernetes.io/router.tls: "true"
-    
-    tls: true
-    extraTls:
-      - hosts:
-          - argocd.127.0.0.1.sslip.io
-  
+    enabled: false
+
   # Extra arguments
   extraArgs:
     - --insecure

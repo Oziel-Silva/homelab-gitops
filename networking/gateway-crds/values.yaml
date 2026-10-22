@@ -1,0 +1,7 @@
+# CRDs do Gateway API (canal standard) e do Envoy Gateway
+crds:
+  gatewayAPI:
+    enabled: true
+    channel: standard
+  envoyGateway:
+    enabled: true
