@@ -13,7 +13,8 @@ RED='\033[0;31m'
 NC='\033[0m'
 
 # Pinned versions
-CHART_VERSION="9.4.7"   # ArgoCD app version: v3.3.2
+# Versão do chart lida de applications/argocd.yaml (fonte única; depois do bootstrap o ArgoCD se autogerencia)
+CHART_VERSION=$(awk '/chart: argo-cd/{f=1} f && /targetRevision/{gsub(/"/,"",$2); print $2; exit}' ../applications/argocd.yaml)
 ARGOCD_APP_VERSION="v3.3.2"
 
 echo -e "${GREEN}🚀 ArgoCD Helm Deployment${NC}"

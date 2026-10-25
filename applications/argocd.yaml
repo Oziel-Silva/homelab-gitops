@@ -1,0 +1,37 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argocd
+  namespace: argocd
+  labels:
+    app.kubernetes.io/name: argocd
+  # Sem resources-finalizer: remover este arquivo do Git não apaga o ArgoCD em cascata
+spec:
+  project: default
+  sources:
+  - repoURL: https://argoproj.github.io/argo-helm
+    chart: argo-cd
+    targetRevision: "9.4.7"   # ArgoCD v3.3.2
+    helm:
+      releaseName: argocd
+      valueFiles:
+      - $values/argocd/values.yaml
+  - repoURL: https://github.com/Oziel-Silva/homelab-gitops
+    targetRevision: HEAD
+    ref: values
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  ignoreDifferences:
+  # Secrets gerados pelo chart/ArgoCD em runtime
+  - kind: Secret
+    name: argocd-secret
+    jsonPointers:
+    - /data
+  - kind: Secret
+    name: argocd-initial-admin-secret
+    jsonPointers:
+    - /data
+  syncPolicy:
+    syncOptions:
+      - ServerSideApply=true
