@@ -107,6 +107,7 @@ configs:
     controller.operation.workers: "10"
     controller.status.processors: "20"
     controller.app.resync: "180"
+    reposerver.parallelism.limit: "10"
     
     # Server insecure mode
     server.insecure: true
@@ -182,8 +183,6 @@ repoServer:
   env:
     - name: ARGOCD_EXEC_TIMEOUT
       value: "300s"
-    - name: ARGOCD_REPO_SERVER_PARALLELISM_LIMIT
-      value: "10"
     - name: ARGOCD_REPO_SERVER_HELM_FILE_LIMIT
       value: "10000"
 
