@@ -67,6 +67,11 @@ Key points:
 - `targetRevision: "*"` means latest, pinned versions use semver (e.g., `"5.4.0"` or `"75.*.*"`)
 - Automated sync with `prune: true` + `selfHeal: true` is opt-in per app
 
+## Self-managed ArgoCD
+
+`deploy.sh` instala o ArgoCD via Helm só no bootstrap. Depois disso ele é gerenciado pela Application `argocd` (`applications/argocd.yaml`):
+mudanças em `argocd/values.yaml` ou na versão do chart são aplicadas por sync, **não** com `helm upgrade`. A Application não tem `resources-finalizer` nem sync automático.
+
 ## Namespaces
 
 | Namespace    | Purpose                        |
@@ -81,6 +86,7 @@ Key points:
 
 | App                   | Chart Repo                                 | Values Path                                    |
 |----------------------|-------------------------------------------|-----------------------------------------------|
+| argocd               | argoproj.github.io/argo-helm (v9.4.7)     | argocd/values.yaml                            |
 | gateway-crds         | docker.io/envoyproxy (OCI, v1.9.2)        | networking/gateway-crds/values.yaml           |
 | envoy-gateway        | docker.io/envoyproxy (OCI, v1.9.2)        | networking/envoy-gateway/values.yaml          |
 | cert-manager         | charts.jetstack.io (v1.21.2)              | networking/cert-manager/values.yaml           |
