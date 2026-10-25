@@ -114,6 +114,13 @@ configs:
 
 ## Server Configuration
 server:
+  # Prometheus metrics scraped by kube-prometheus-stack (needs the release label to be selected)
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+      additionalLabels:
+        release: kube-prometheus-stack
   # Replica count for HA (use 1 for homelab)
   replicas: 1
   
@@ -146,6 +153,13 @@ server:
 
 ## Application Controller Configuration  
 controller:
+  # Prometheus metrics scraped by kube-prometheus-stack (needs the release label to be selected)
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+      additionalLabels:
+        release: kube-prometheus-stack
   replicas: 1
   
   # Resource limits
@@ -168,6 +182,13 @@ controller:
 
 ## Repo Server Configuration
 repoServer:
+  # Prometheus metrics scraped by kube-prometheus-stack (needs the release label to be selected)
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+      additionalLabels:
+        release: kube-prometheus-stack
   replicas: 1
   
   # Resource limits
@@ -201,6 +222,13 @@ redis:
 
 ## ApplicationSet Controller (optional)
 applicationSet:
+  # Prometheus metrics scraped by kube-prometheus-stack (needs the release label to be selected)
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+      additionalLabels:
+        release: kube-prometheus-stack
   enabled: true
   replicas: 1
   
@@ -214,6 +242,13 @@ applicationSet:
 
 ## Notifications Controller (optional)
 notifications:
+  # Prometheus metrics scraped by kube-prometheus-stack (needs the release label to be selected)
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+      additionalLabels:
+        release: kube-prometheus-stack
   enabled: true
   
   resources:
