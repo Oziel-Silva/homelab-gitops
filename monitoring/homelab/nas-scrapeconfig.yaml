@@ -24,7 +24,7 @@ metadata:
     release: kube-prometheus-stack
 spec:
   # smartctl acorda os discos a cada coleta; não precisa ser frequente
-  scrapeInterval: 60s
+  scrapeInterval: 5m
   scrapeTimeout: 30s
   staticConfigs:
   - targets:
