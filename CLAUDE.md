@@ -96,6 +96,7 @@ mudanças em `argocd/values.yaml` ou na versão do chart são aplicadas por sync
 | loki                 | grafana.github.io/helm-charts             | monitoring/loki/values.yaml                   |
 | promtail             | grafana.github.io/helm-charts             | monitoring/promtail/values.yaml               |
 | tempo                | grafana.github.io/helm-charts (tempo-distributed) | monitoring/tempo-distributed/values.yaml |
+| homelab-monitoring   | este repo (diretório)                     | monitoring/homelab/*.yaml (scrape do NAS, dashboard `homelab`) |
 | backstage            | ver applications/backstage.yaml           | internal-tools/backstage/values.yaml          |
 
 ## Ingress (Gateway API)

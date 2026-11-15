@@ -1,0 +1,30 @@
+# Exporters Prometheus para o NAS (UGREEN DH2300 / UGOS Pro).
+# Rodam no próprio NAS, via app Docker do UGOS; o Prometheus do cluster raspa as portas abaixo.
+#
+#   node-exporter      :9100  CPU/placa (node_hwmon_temp_celsius), memória, rede, filesystem
+#   smartctl-exporter  :9633  temperatura e saúde SMART de cada disco (smartctl_device_temperature)
+#
+# Sem autenticação: expor só na LAN.
+services:
+  node-exporter:
+    image: prom/node-exporter:v1.12.1
+    container_name: node-exporter
+    restart: unless-stopped
+    network_mode: host
+    pid: host
+    command:
+      - --path.rootfs=/host
+      - --web.listen-address=:9100
+    volumes:
+      - /:/host:ro,rslave
+
+  smartctl-exporter:
+    # v0.15.0 é a primeira versão multi-arch (amd64 + arm64)
+    image: prometheuscommunity/smartctl-exporter:v0.15.0
+    container_name: smartctl-exporter
+    restart: unless-stopped
+    # smartctl precisa de acesso direto aos dispositivos de bloco
+    privileged: true
+    user: root
+    ports:
+      - "9633:9633"

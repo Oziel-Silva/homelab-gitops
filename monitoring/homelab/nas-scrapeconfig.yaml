@@ -1,0 +1,34 @@
+# Scrape dos exporters que rodam no NAS (ver nas/exporters/docker-compose.yml).
+# O label release é exigido pelo scrapeConfigSelector do kube-prometheus-stack.
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: ScrapeConfig
+metadata:
+  name: nas-node
+  namespace: monitoring
+  labels:
+    release: kube-prometheus-stack
+spec:
+  scrapeInterval: 30s
+  staticConfigs:
+  - targets:
+    - 192.168.1.120:9100
+    labels:
+      host: dh2300-nas
+---
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: ScrapeConfig
+metadata:
+  name: nas-smartctl
+  namespace: monitoring
+  labels:
+    release: kube-prometheus-stack
+spec:
+  # smartctl acorda os discos a cada coleta; não precisa ser frequente
+  # abaixo dos 5 min de lookback do Prometheus, para a série não ficar stale entre coletas
+  scrapeInterval: 4m
+  scrapeTimeout: 30s
+  staticConfigs:
+  - targets:
+    - 192.168.1.120:9633
+    labels:
+      host: dh2300-nas
