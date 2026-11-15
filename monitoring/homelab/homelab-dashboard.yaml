@@ -17,11 +17,11 @@ data:
       ],
       "timezone": "browser",
       "schemaVersion": 39,
-      "version": 3,
+      "version": 4,
       "editable": true,
       "refresh": "1m",
       "time": {
-        "from": "now-6h",
+        "from": "now-24h",
         "to": "now"
       },
       "graphTooltip": 1,
@@ -466,6 +466,188 @@ data:
           }
         },
         {
+          "id": 12,
+          "title": "Volume: usado e livre",
+          "type": "stat",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "gridPos": {
+            "x": 0,
+            "y": 7,
+            "w": 6,
+            "h": 8
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${datasource}"
+              },
+              "expr": "node_filesystem_size_bytes{host=\"dh2300-nas\",mountpoint=\"/volume1\"} - node_filesystem_avail_bytes{host=\"dh2300-nas\",mountpoint=\"/volume1\"}",
+              "legendFormat": "usado"
+            },
+            {
+              "refId": "B",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${datasource}"
+              },
+              "expr": "node_filesystem_avail_bytes{host=\"dh2300-nas\",mountpoint=\"/volume1\"}",
+              "legendFormat": "livre"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "decbytes",
+              "decimals": 2,
+              "color": {
+                "mode": "fixed",
+                "fixedColor": "blue"
+              },
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "blue",
+                    "value": null
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "livre"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "mode": "fixed",
+                      "fixedColor": "green"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "colorMode": "value",
+            "graphMode": "none",
+            "textMode": "value_and_name",
+            "orientation": "horizontal"
+          }
+        },
+        {
+          "id": 13,
+          "title": "Ocupação do volume (histórico)",
+          "type": "timeseries",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "gridPos": {
+            "x": 6,
+            "y": 7,
+            "w": 18,
+            "h": 8
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${datasource}"
+              },
+              "expr": "node_filesystem_size_bytes{host=\"dh2300-nas\",mountpoint=\"/volume1\"} - node_filesystem_avail_bytes{host=\"dh2300-nas\",mountpoint=\"/volume1\"}",
+              "legendFormat": "usado"
+            },
+            {
+              "refId": "B",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${datasource}"
+              },
+              "expr": "node_filesystem_avail_bytes{host=\"dh2300-nas\",mountpoint=\"/volume1\"}",
+              "legendFormat": "livre"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "decbytes",
+              "decimals": 2,
+              "min": 0,
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "drawStyle": "line",
+                "lineWidth": 2,
+                "fillOpacity": 8,
+                "showPoints": "never",
+                "spanNulls": true
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "usado"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "mode": "fixed",
+                      "fixedColor": "blue"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "livre"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "mode": "fixed",
+                      "fixedColor": "green"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "options": {
+            "legend": {
+              "displayMode": "table",
+              "placement": "bottom",
+              "calcs": [
+                "lastNotNull",
+                "max"
+              ]
+            },
+            "tooltip": {
+              "mode": "multi",
+              "sort": "desc"
+            }
+          }
+        },
+        {
           "id": 7,
           "title": "Temperatura dos discos (histórico)",
           "type": "timeseries",
@@ -475,7 +657,7 @@ data:
           },
           "gridPos": {
             "x": 0,
-            "y": 7,
+            "y": 15,
             "w": 12,
             "h": 8
           },
@@ -531,7 +713,7 @@ data:
           },
           "gridPos": {
             "x": 12,
-            "y": 7,
+            "y": 15,
             "w": 12,
             "h": 8
           },
@@ -587,7 +769,7 @@ data:
           },
           "gridPos": {
             "x": 0,
-            "y": 15,
+            "y": 23,
             "w": 8,
             "h": 8
           },
@@ -645,7 +827,7 @@ data:
           },
           "gridPos": {
             "x": 8,
-            "y": 15,
+            "y": 23,
             "w": 8,
             "h": 8
           },
@@ -703,7 +885,7 @@ data:
           },
           "gridPos": {
             "x": 16,
-            "y": 15,
+            "y": 23,
             "w": 8,
             "h": 8
           },
