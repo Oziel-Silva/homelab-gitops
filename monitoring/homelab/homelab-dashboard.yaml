@@ -1,4 +1,4 @@
-# Dashboard "homelab" do Grafana, importado pelo sidecar (label grafana_dashboard).
+# Grafana "homelab" dashboard, imported by the dashboards sidecar (label grafana_dashboard).
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -17,7 +17,7 @@ data:
       ],
       "timezone": "browser",
       "schemaVersion": 39,
-      "version": 5,
+      "version": 6,
       "editable": true,
       "refresh": "1m",
       "time": {
@@ -60,7 +60,7 @@ data:
         },
         {
           "id": 1,
-          "title": "Temperatura dos discos",
+          "title": "Disk temperature",
           "type": "gauge",
           "datasource": {
             "type": "prometheus",
@@ -126,7 +126,7 @@ data:
         },
         {
           "id": 2,
-          "title": "Temperatura CPU (máx.)",
+          "title": "CPU temperature (max)",
           "type": "gauge",
           "datasource": {
             "type": "prometheus",
@@ -243,7 +243,7 @@ data:
                       "color": "green"
                     },
                     "0": {
-                      "text": "FALHA",
+                      "text": "FAIL",
                       "color": "red"
                     }
                   }
@@ -268,7 +268,7 @@ data:
         },
         {
           "id": 4,
-          "title": "RAID ativo",
+          "title": "RAID active",
           "type": "stat",
           "datasource": {
             "type": "prometheus",
@@ -318,7 +318,7 @@ data:
                       "color": "green"
                     },
                     "0": {
-                      "text": "FALHA",
+                      "text": "FAIL",
                       "color": "red"
                     }
                   }
@@ -343,7 +343,7 @@ data:
         },
         {
           "id": 5,
-          "title": "Volume usado",
+          "title": "Volume used",
           "type": "stat",
           "datasource": {
             "type": "prometheus",
@@ -467,7 +467,7 @@ data:
         },
         {
           "id": 12,
-          "title": "Volume: usado e livre",
+          "title": "Volume: used and free",
           "type": "stat",
           "datasource": {
             "type": "prometheus",
@@ -487,7 +487,7 @@ data:
                 "uid": "${datasource}"
               },
               "expr": "node_filesystem_size_bytes{host=\"dh2300-nas\",mountpoint=\"/volume1\"} - node_filesystem_avail_bytes{host=\"dh2300-nas\",mountpoint=\"/volume1\"}",
-              "legendFormat": "usado"
+              "legendFormat": "used"
             },
             {
               "refId": "B",
@@ -496,7 +496,7 @@ data:
                 "uid": "${datasource}"
               },
               "expr": "node_filesystem_avail_bytes{host=\"dh2300-nas\",mountpoint=\"/volume1\"}",
-              "legendFormat": "livre"
+              "legendFormat": "free"
             }
           ],
           "fieldConfig": {
@@ -521,7 +521,7 @@ data:
               {
                 "matcher": {
                   "id": "byName",
-                  "options": "livre"
+                  "options": "free"
                 },
                 "properties": [
                   {
@@ -551,7 +551,7 @@ data:
         },
         {
           "id": 13,
-          "title": "Ocupação do volume (histórico)",
+          "title": "Volume usage (history)",
           "type": "timeseries",
           "datasource": {
             "type": "prometheus",
@@ -571,7 +571,7 @@ data:
                 "uid": "${datasource}"
               },
               "expr": "node_filesystem_size_bytes{host=\"dh2300-nas\",mountpoint=\"/volume1\"} - node_filesystem_avail_bytes{host=\"dh2300-nas\",mountpoint=\"/volume1\"}",
-              "legendFormat": "usado"
+              "legendFormat": "used"
             },
             {
               "refId": "B",
@@ -580,7 +580,7 @@ data:
                 "uid": "${datasource}"
               },
               "expr": "node_filesystem_avail_bytes{host=\"dh2300-nas\",mountpoint=\"/volume1\"}",
-              "legendFormat": "livre"
+              "legendFormat": "free"
             }
           ],
           "fieldConfig": {
@@ -603,7 +603,7 @@ data:
               {
                 "matcher": {
                   "id": "byName",
-                  "options": "usado"
+                  "options": "used"
                 },
                 "properties": [
                   {
@@ -618,7 +618,7 @@ data:
               {
                 "matcher": {
                   "id": "byName",
-                  "options": "livre"
+                  "options": "free"
                 },
                 "properties": [
                   {
@@ -649,7 +649,7 @@ data:
         },
         {
           "id": 7,
-          "title": "Temperatura dos discos (histórico)",
+          "title": "Disk temperature (history)",
           "type": "timeseries",
           "datasource": {
             "type": "prometheus",
@@ -705,7 +705,7 @@ data:
         },
         {
           "id": 8,
-          "title": "Temperatura CPU / placa (zonas térmicas)",
+          "title": "CPU / board temperature (thermal zones)",
           "type": "timeseries",
           "datasource": {
             "type": "prometheus",
@@ -761,7 +761,7 @@ data:
         },
         {
           "id": 9,
-          "title": "Uso de CPU e temperatura",
+          "title": "CPU usage and temperature",
           "type": "timeseries",
           "datasource": {
             "type": "prometheus",
@@ -790,7 +790,7 @@ data:
                 "uid": "${datasource}"
               },
               "expr": "max(node_hwmon_temp_celsius{host=\"dh2300-nas\"})",
-              "legendFormat": "temperatura"
+              "legendFormat": "temperature"
             }
           ],
           "fieldConfig": {
@@ -825,14 +825,14 @@ data:
                   },
                   {
                     "id": "custom.axisLabel",
-                    "value": "uso de CPU"
+                    "value": "CPU usage"
                   }
                 ]
               },
               {
                 "matcher": {
                   "id": "byName",
-                  "options": "temperatura"
+                  "options": "temperature"
                 },
                 "properties": [
                   {
@@ -845,7 +845,7 @@ data:
                   },
                   {
                     "id": "custom.axisLabel",
-                    "value": "temperatura"
+                    "value": "temperature"
                   },
                   {
                     "id": "custom.fillOpacity",
@@ -887,7 +887,7 @@ data:
         },
         {
           "id": 10,
-          "title": "Memória usada",
+          "title": "Memory used",
           "type": "timeseries",
           "datasource": {
             "type": "prometheus",
@@ -907,7 +907,7 @@ data:
                 "uid": "${datasource}"
               },
               "expr": "100 * (1 - node_memory_MemAvailable_bytes{host=\"dh2300-nas\"} / node_memory_MemTotal_bytes{host=\"dh2300-nas\"})",
-              "legendFormat": "memória"
+              "legendFormat": "memory"
             }
           ],
           "fieldConfig": {
@@ -945,7 +945,7 @@ data:
         },
         {
           "id": 11,
-          "title": "Rede",
+          "title": "Network",
           "type": "timeseries",
           "datasource": {
             "type": "prometheus",
@@ -965,7 +965,7 @@ data:
                 "uid": "${datasource}"
               },
               "expr": "sum(rate(node_network_receive_bytes_total{host=\"dh2300-nas\",device!~\"lo|veth.*|docker.*|br-.*\"}[5m])) * 8",
-              "legendFormat": "recebido"
+              "legendFormat": "received"
             },
             {
               "refId": "B",
@@ -974,7 +974,7 @@ data:
                 "uid": "${datasource}"
               },
               "expr": "sum(rate(node_network_transmit_bytes_total{host=\"dh2300-nas\",device!~\"lo|veth.*|docker.*|br-.*\"}[5m])) * 8",
-              "legendFormat": "enviado"
+              "legendFormat": "sent"
             }
           ],
           "fieldConfig": {
